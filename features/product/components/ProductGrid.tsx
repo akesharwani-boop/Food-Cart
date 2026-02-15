@@ -1,5 +1,4 @@
 import ProductCard from "./ProductCard";
-
 interface Recipe {
   id: number;
   name: string;
@@ -37,6 +36,7 @@ export default function ProductGrid({
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
+     
     </div>
   );
 }
