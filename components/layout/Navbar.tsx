@@ -8,20 +8,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth/authSlice";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const cartCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
+  const role = user?.role;
   const navLinks = [
     { name: "Sweets", href: "/products" },
     { name: "Snacks", href: "/products" },
@@ -40,10 +42,8 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
-
       {/* ================= TOP ROW ================= */}
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
         {/* BIG LOGO */}
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -67,21 +67,40 @@ export default function Navbar() {
           />
           <button
             onClick={handleSearch}
-            className="rounded bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
-          >
+            className="rounded bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
             <Search size={18} />
           </button>
         </div>
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-6">
+          {isAuthenticated && user ? (
+            <div className="hidden md:flex items-center gap-4">
+              <span className="text-sm font-medium">
+                {role === "admin" ? "Admin" : user.firstName}
+              </span>
 
-          <Link
-            href="/login"
-            className="hidden text-sm font-medium hover:text-orange-500 md:block"
-          >
-            Login
-          </Link>
+              <button
+                onClick={() => dispatch(logout())}
+                className="text-sm text-red-500 hover:underline">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden text-sm font-medium hover:text-orange-500 md:block">
+                Login
+              </Link>
+
+              <Link href="/signup" className="hidden md:block">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-sm">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
 
           <Link href="/signup" className="hidden md:block">
             <Button className="bg-orange-500 hover:bg-orange-600 text-sm">
@@ -102,8 +121,7 @@ export default function Navbar() {
           {/* MOBILE MENU BUTTON */}
           <button
             className="md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
+            onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? (
               <X className="h-6 w-6" />
             ) : (
@@ -122,8 +140,7 @@ export default function Navbar() {
               href={link.href}
               className={`transition hover:text-orange-500 ${
                 pathname === link.href ? "text-orange-500" : "text-gray-700"
-              }`}
-            >
+              }`}>
               {link.name}
             </Link>
           ))}
@@ -133,7 +150,6 @@ export default function Navbar() {
       {/* ================= MOBILE DRAWER ================= */}
       {mobileOpen && (
         <div className="border-t bg-white p-4 space-y-4 shadow-md md:hidden">
-
           {/* Mobile Search */}
           <div className="flex items-center rounded-md border px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400">
             <input
@@ -155,23 +171,42 @@ export default function Navbar() {
               key={link.name}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="block text-sm font-medium text-gray-700 hover:text-orange-500"
-            >
+              className="block text-sm font-medium text-gray-700 hover:text-orange-500">
               {link.name}
             </Link>
           ))}
 
-          <Link href="/login">
-            <Button variant="outline" className="w-full">
-              Login
-            </Button>
-          </Link>
+          {user ? (
+            <>
+              <div className="text-sm font-medium">
+                {role === "admin" ? "Admin" : user.firstName}
+              </div>
 
-          <Link href="/signup">
-            <Button className="w-full bg-orange-500 hover:bg-orange-600">
-              Sign Up
-            </Button>
-          </Link>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  dispatch(logout());
+                  setMobileOpen(false);
+                }}
+                className="w-full">
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="outline" className="w-full">
+                  Login
+                </Button>
+              </Link>
+
+              <Link href="/signup">
+                <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
