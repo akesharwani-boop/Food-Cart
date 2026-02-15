@@ -13,7 +13,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      
       <body className="min-h-screen bg-white antialiased">
         <ReduxProvider>
           <SiteLayout>{children}</SiteLayout>
