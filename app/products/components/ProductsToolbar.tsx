@@ -21,7 +21,6 @@ export default function ProductsToolbar() {
 
   const [search, setSearch] = useState(urlSearch);
 
-  //  MOVE THIS ABOVE useEffect
   const updateParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -33,12 +32,10 @@ export default function ProductsToolbar() {
     router.push(`/products?${params.toString()}`);
   };
 
-  // Sync input when URL changes
   useEffect(() => {
     setSearch(urlSearch);
   }, [urlSearch]);
 
-  // Debounced search
   useEffect(() => {
     const timer = setTimeout(() => {
       if (search !== urlSearch) {
@@ -47,7 +44,7 @@ export default function ProductsToolbar() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, urlSearch]); // now safe
+  }, [search, urlSearch]); 
 
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
