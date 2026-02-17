@@ -14,7 +14,7 @@ export default function ProductsPage() {
   const tag = searchParams.get("tag") ?? undefined;
   const meal = searchParams.get("meal") ?? undefined;
 
-  const { data, isLoading } = useRecipes({
+  const { data, isLoading, isError } = useRecipes({
     page,
     search,
     tag,
@@ -22,9 +22,13 @@ export default function ProductsPage() {
   });
 
   if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data</p>;
+
+  if (!data || !data.recipes) {
+    return <p>No data found</p>;
+  }
 
   const totalPages = Math.ceil(data.total / 8);
-
   return (
     <div className="container mx-auto px-6 py-10 space-y-8">
       <ProductsToolbar />

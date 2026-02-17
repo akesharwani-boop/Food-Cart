@@ -16,14 +16,11 @@ export default function Navbar() {
   const dispatch = useDispatch();
 
   const { user, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const cartCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -62,7 +59,6 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
       {/* ================= TOP ROW ================= */}
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -94,10 +90,8 @@ export default function Navbar() {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-6">
-          
           {isAuthenticated && user ? (
             <div className="hidden md:flex items-center gap-4">
-
               {/* Admin Dashboard */}
               {role === "admin" && (
                 <Link
@@ -128,12 +122,6 @@ export default function Navbar() {
                 className="hidden text-sm font-medium hover:text-orange-500 md:block"
               >
                 Login
-              </Link>
-
-              <Link href="/login" className="hidden md:block">
-                <Button className="bg-orange-500 hover:bg-orange-600 text-sm">
-                  Sign Up
-                </Button>
               </Link>
             </>
           )}
@@ -173,9 +161,7 @@ export default function Navbar() {
               key={link.name}
               href={isAuthenticated ? link.href : "/login"}
               className={`transition hover:text-orange-500 ${
-                pathname === link.href
-                  ? "text-orange-500"
-                  : "text-gray-700"
+                pathname === link.href ? "text-orange-500" : "text-gray-700"
               }`}
             >
               {link.name}
@@ -187,7 +173,6 @@ export default function Navbar() {
       {/* ================= MOBILE DRAWER ================= */}
       {mobileOpen && (
         <div className="border-t bg-white p-4 space-y-4 shadow-md md:hidden">
-          
           {/* Mobile Search */}
           <div className="flex items-center rounded-md border px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400">
             <input
@@ -245,12 +230,6 @@ export default function Navbar() {
               <Link href="/login">
                 <Button variant="outline" className="w-full">
                   Login
-                </Button>
-              </Link>
-
-              <Link href="/login">
-                <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                  Sign Up
                 </Button>
               </Link>
             </>

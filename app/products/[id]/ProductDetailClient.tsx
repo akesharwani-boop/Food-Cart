@@ -74,7 +74,7 @@ export default function ProductDetailClient({ id }: Props) {
           <div className="flex gap-4">
             <Button
               onClick={handleAddToCart}
-              className="flex-1 bg-orange-500 hover:bg-orange-600">
+              className="flex-0 bg-orange-500 hover:bg-orange-600">
               Add to Cart
             </Button>
           </div>
