@@ -3,13 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, ShoppingCart, Search, X } from "lucide-react";
+import {  ShoppingCart, Search,  } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { logout } from "@/features/auth/authSlice";
-
+import NavbarMobile from "./NavbarMobile";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -45,7 +44,7 @@ export default function Navbar() {
     if (search.trim() !== "") {
       router.push(`/products?search=${search}`);
       setSearch("");
-      setMobileOpen(false);
+      // setMobileOpen(false);
     }
   };
 
@@ -140,16 +139,6 @@ export default function Navbar() {
           </Link>
 
           {/* MOBILE MENU BUTTON */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
         </div>
       </div>
 
@@ -169,73 +158,15 @@ export default function Navbar() {
           ))}
         </div>
       </div>
-
-      {/* ================= MOBILE DRAWER ================= */}
-      {mobileOpen && (
-        <div className="border-t bg-white p-4 space-y-4 shadow-md md:hidden">
-          {/* Mobile Search */}
-          <div className="flex items-center rounded-md border px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="flex-1 bg-transparent text-sm outline-none"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            <button onClick={handleSearch}>
-              <Search size={18} />
-            </button>
-          </div>
-
-          {/* Mobile Links */}
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={isAuthenticated ? link.href : "/login"}
-              onClick={() => setMobileOpen(false)}
-              className="block text-sm font-medium text-gray-700 hover:text-orange-500"
-            >
-              {link.name}
-            </Link>
-          ))}
-
-          {isAuthenticated && user ? (
-            <>
-              <div className="text-sm font-medium">
-                {role === "admin" ? "Admin" : user.firstName}
-              </div>
-
-              {role === "admin" && (
-                <Link href="/admin/dashboard">
-                  <Button variant="outline" className="w-full">
-                    Dashboard
-                  </Button>
-                </Link>
-              )}
-
-              <Button
-                variant="outline"
-                onClick={() => {
-                  handleLogout();
-                  setMobileOpen(false);
-                }}
-                className="w-full text-red-500"
-              >
-                Logout
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link href="/login">
-                <Button variant="outline" className="w-full">
-                  Login
-                </Button>
-              </Link>
-            </>
-          )}
-        </div>
-      )}
+      <NavbarMobile
+        mobileOpen={mobileOpen}
+        search={search}
+        setSearch={setSearch}
+        handleSearch={handleSearch}
+        setMobileOpen={setMobileOpen}
+        handleLogout={handleLogout}
+        navLinks={navLinks}
+      />
     </header>
   );
 }
