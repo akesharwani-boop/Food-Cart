@@ -28,9 +28,9 @@ export function useRecipes({ page, search, tag, meal }: Params) {
       const { data } = await api.get(endpoint, {
         params: { limit, skip },
       });
-
+      console.log('data',data)
       return data;
     },
-    placeholderData:(prev)=>prev
+   staleTime :1000*60
   });
 }

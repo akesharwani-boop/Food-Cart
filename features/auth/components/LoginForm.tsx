@@ -1,137 +1,105 @@
 "use client";
 
+import { useFormik } from "formik";
+import { loginSchema } from "../validation/login.schema";
+import { useLogin } from "../hooks/useLogin";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../authSlice";
 import { useRouter } from "next/navigation";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { loginSchema } from "../validation/login.schema";
 import toast from "react-hot-toast";
-import { AppDispatch } from "@/store/store";
+import type { AppDispatch } from "@/store/store";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
-interface LoginFormProps {
-  switchToSignup: () => void;
+interface LoginFormValues {
+  username: string;
+  password: string;
 }
 
-export default function LoginForm({ switchToSignup }: LoginFormProps) {
+export default function LoginForm() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const { mutateAsync, isPending } = useLogin();
 
-  const handleLogin = async (username: string, password: string) => {
-    try {
-      // ADMIN LOGIN
-      if (username === "admin" && password === "admin123") {
+  const formik = useFormik<LoginFormValues>({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: loginSchema,
+    onSubmit: async (values) => {
+      try {
+        const data = await mutateAsync(values);
+
         dispatch(
           loginSuccess({
             user: {
-              id: 0,
-              username: "admin",
-              email: "admin@food.com",
-              firstName: "Admin",
-              lastName: "",
-              image: "",
-              role: "admin",
+              id: data.id,
+              username: data.username,
+              email: data.email,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              image: data.image,
+              role: "user",
             },
-            accessToken: "admin-token",
-            refreshToken: "admin-refresh",
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
           }),
         );
 
-        toast.success("Admin logged in successfully 👑");
-        router.push("/admin/dashboard");
-        return;
+        toast.success("Login successful 🚀");
+        router.push("/products");
+      } catch {
+        toast.error("Invalid credentials ❌");
       }
-
-      // NORMAL USER LOGIN
-      const res = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!res.ok) throw new Error("Invalid credentials");
-
-      const data = await res.json();
-
-      dispatch(
-        loginSuccess({
-          user: {
-            id: data.id,
-            username: data.username,
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            image: data.image,
-            role: "user",
-          },
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        }),
-      );
-
-      toast.success("User logged in successfully 🚀");
-      router.push("/products");
-    } catch {
-      toast.error("Invalid username or password ❌");
-    }
-  };
+    },
+  });
 
   return (
-    <>
-      <Formik
-        initialValues={{ username: "", password: "" }}
-        validationSchema={loginSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          await handleLogin(values.username, values.password);
-          setSubmitting(false);
-        }}>
-        {({ isSubmitting }) => (
-          <Form className="space-y-5">
-            <div>
-              <Field
-                name="username"
-                placeholder="Username"
-                className="w-full border p-3 rounded-lg"
-              />
-              <ErrorMessage
-                name="username"
-                component="p"
-                className="text-red-500 text-sm mt-1"
-              />
-            </div>
-
-            <div>
-              <Field
-                name="password"
-                type="password"
-                placeholder="Password"
-                className="w-full border p-3 rounded-lg"
-              />
-              <ErrorMessage
-                name="password"
-                component="p"
-                className="text-red-500 text-sm mt-1"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition">
-              {isSubmitting ? "Logging in..." : "Login"}
-            </button>
-          </Form>
+    <form onSubmit={formik.handleSubmit} className="space-y-5">
+      <div className="space-y-2">
+        <Label htmlFor="username">Username</Label>
+        <Input
+          id="username"
+          name="username"
+          placeholder="Enter username"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.username}
+        />
+        {formik.touched.username && formik.errors.username && (
+          <p className="text-red-500 text-sm">{formik.errors.username}</p>
         )}
-      </Formik>
+      </div>
 
-      {/* Switch Link */}
-      <p className="text-sm text-center mt-4">
-        Don’t have an account?{" "}
-        <button
-          onClick={switchToSignup}
-          className="text-orange-500 font-medium hover:underline">
-          Sign Up
-        </button>
-      </p>
-    </>
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Enter password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+        />
+        {formik.touched.password && formik.errors.password && (
+          <p className="text-red-500 text-sm">{formik.errors.password}</p>
+        )}
+      </div>
+
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="
+        w-full
+        bg-orange-500
+        hover:bg-orange-600
+        text-white"
+      >
+        {isPending ? "Logging in..." : "Login"}
+      </Button>
+    </form>
   );
 }
