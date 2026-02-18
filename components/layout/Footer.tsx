@@ -8,7 +8,6 @@ export default function Footer() {
     <footer className="mt-20 bg-[#f5f3ef] border-t">
       <div className="container mx-auto px-6 py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
-          {/* Column 1 */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Get To Know Us</h3>
             <ul className="space-y-2 text-sm text-gray-600">
@@ -29,8 +28,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Column 2 */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Customer Care</h3>
             <ul className="space-y-2 text-sm text-gray-600">
@@ -48,8 +45,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Column 3 */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Policies</h3>
             <ul className="space-y-2 text-sm text-gray-600">
@@ -67,8 +62,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Column 4 - Social */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Follow Us</h3>
             <div className="flex gap-4 text-gray-600">
@@ -78,8 +71,6 @@ export default function Footer() {
               <Twitter className="hover:text-orange-500 cursor-pointer" />
             </div>
           </div>
-
-          {/* Column 5 - Newsletter */}
           <div>
             <h3 className="font-semibold text-lg mb-4">
               Subscribe to Food-letter!
@@ -100,11 +91,9 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* Bottom Bar */}
         <div className="mt-12 border-t pt-6 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cooking Healthy Food. All rights
-          reserved.
+          reserved By Adiiti Kesharwani.
         </div>
       </div>
     </footer>

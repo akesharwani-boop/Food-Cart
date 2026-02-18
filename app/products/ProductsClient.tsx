@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import ProductGrid from "@/features/product/components/ProductGrid";
-import Pagination from "@/features/product/components/Pagination";
+// import Pagination from "@/features/product/components/Pagination";
 import ProductsToolbar from "./components/ProductsToolbar";
 
 interface Props {
@@ -67,7 +67,7 @@ export default function ProductsClient({ searchParams }: Props) {
         page={page}
       />
 
-      <Pagination totalPages={Math.ceil(data.total / limit)} />
+      {/* <Pagination totalPages={Math.ceil(data.total / limit)} /> */}
     </>
   );
 }

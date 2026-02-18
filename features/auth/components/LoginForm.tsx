@@ -2,7 +2,7 @@
 
 import { useFormik } from "formik";
 import { loginSchema } from "../validation/login.schema";
-import { useLogin } from "../hooks/useLogin";
+import getUserProfile, { useLogin } from "../hooks/useLogin";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../authSlice";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,8 @@ import type { AppDispatch } from "@/store/store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
+import { api } from "@/lib/axios";
+import axios from "axios";
 interface LoginFormValues {
   username: string;
   password: string;
@@ -32,6 +33,9 @@ export default function LoginForm() {
       try {
         const data = await mutateAsync(values);
 
+        // 👇 Temporary role logic
+        const role = data.username === "emilys" ? "admin" : "user";
+
         dispatch(
           loginSuccess({
             user: {
@@ -41,7 +45,7 @@ export default function LoginForm() {
               firstName: data.firstName,
               lastName: data.lastName,
               image: data.image,
-              role: "user",
+              role,
             },
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
@@ -49,7 +53,12 @@ export default function LoginForm() {
         );
 
         toast.success("Login successful 🚀");
-        router.push("/products");
+
+        if (role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/products");
+        }
       } catch {
         toast.error("Invalid credentials ❌");
       }

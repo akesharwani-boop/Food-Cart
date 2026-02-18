@@ -51,7 +51,6 @@ export default function ProductDetailClient({ id }: Props) {
           <h1 className="text-3xl font-bold">{product.name}</h1>
 
           <div className="text-2xl font-semibold text-orange-600">₹{price}</div>
-          {/* Quantity */}
           <div className="flex items-center gap-4">
             <span className="font-medium">Quantity:</span>
 

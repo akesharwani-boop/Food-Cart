@@ -9,6 +9,6 @@ export const loginUser = async (payload: {
 };
 
 export const getCurrentUser = async () => {
-  const { data } = await api.get("/auth/me");
+  const { data } = await api.get("/user/me");
   return data;
 };
