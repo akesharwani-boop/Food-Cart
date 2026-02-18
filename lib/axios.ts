@@ -5,7 +5,7 @@ import { logout, loginSuccess } from "@/features/auth/authSlice";
 
 export const api = axios.create({
   baseURL: "https://dummyjson.com",
- 
+  
 });
 
 /* ===============================
@@ -14,6 +14,8 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   const state = store.getState();
   const token = state.auth.accessToken;
+
+  console.log("token",token)
 
   if (config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -42,7 +44,7 @@ api.interceptors.response.use(
         const { data } = await axios.post(
           "https://dummyjson.com/auth/refresh",
           { refreshToken },
-          { withCredentials: true },
+          // { withCredentials: true },
         );
 
         store.dispatch(

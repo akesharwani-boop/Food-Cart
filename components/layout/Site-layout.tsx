@@ -11,15 +11,12 @@ export default function SiteLayout({
   return (
     <div className="flex min-h-screen flex-col">
       
-      {/* Top Navbar */}
       <Navbar />
 
-      {/* Main Content */}
       <main className="flex-1">
         {children}
       </main>
 
-      {/* Footer */}
       <Footer />
       
     </div>
