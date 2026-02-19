@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ Food Cart – Full Stack E-Commerce Application
 
-## Getting Started
+A modern full-stack food ordering application built using **Next.js (App Router)**, **TypeScript**, **Redux Toolkit**, and **React Query**.  
+The project includes authentication, role-based access (Admin/User), cart management, and a fully functional Admin Dashboard with CRUD operations.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👤 Authentication
+- JWT-based authentication
+- Access & Refresh token handling
+- Automatic token refresh with Axios interceptors
+- Role-based routing (Admin / User)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🛍️ User Side
+- Browse products
+- Search functionality (Protected)
+- Add to Cart
+- Cart quantity management
+- Protected Cart access
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🛠️ Admin Panel
+- Dashboard
+- Manage Recipes (CRUD)
+  - Add Recipe
+  - Edit Recipe
+  - Delete Recipe
+- Optimistic UI Updates
+- Pagination support
 
-## Learn More
+### ⚡ Advanced Features
+- React Query caching
+- Optimistic updates
+- Token refresh flow
+- Global state management with Redux Toolkit
+- Responsive design (Mobile + Desktop)
+- Modular feature-based folder structure
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+##  Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontend
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Redux Toolkit
+- React Query
+- Formik + Yup
+- Lucide Icons
 
-## Deploy on Vercel
+### Backend API
+- DummyJSON API (for products & auth)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##  Architecture Overview
+src/
+├── app/
+├── features/
+│ ├── auth/
+│ ├── admin/
+│ ├── cart/
+├── components/
+├── store/
+├── lib/
+
+
+### Key Architectural Decisions:
+- Axios instance with request & response interceptors
+- Centralized API layer
+- Role-based conditional rendering
+- Optimistic updates for instant UI feedback
+- Query invalidation for data sync
+
+---
+
+## 🔐 Authentication Flow
+
+1. User logs in
+2. Access & Refresh tokens stored in Redux
+3. Axios interceptor attaches token automatically
+4. If access token expires → auto refresh using refresh token
+5. If refresh fails → user is logged out
+
+---
+
+## 📊 Admin CRUD Strategy
+
+- React Query `useMutation`
+- Optimistic update using `onMutate`
+- Rollback on error
+- Cache sync using `setQueriesData`
+
+---
+
+## 📱 Responsive Design
+
+- Fully responsive layout
+- Desktop navigation
+- Mobile hamburger menu
+- Adaptive search bar
+- Clean UI across all breakpoints
+
+---
+
+## 🎯 Key Learnings
+
+- Real-world token refresh handling
+- Optimistic UI patterns
+- Managing global state vs server state
+- Scalable project architecture
+- Debugging network & API errors
+- Role-based rendering strategies
+
+---
+
+## 👩‍💻 Author
+
+**Aditi Kesharwani**  
+Frontend Developer | React | Next.js | TypeScript  
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
+
+
+This project follows a **feature-based modular architecture**:
+
