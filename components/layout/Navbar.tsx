@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import {  ShoppingCart, Search,  } from "lucide-react";
+import { ShoppingCart, Search } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { useState } from "react";
 import { logout } from "@/features/auth/authSlice";
 import NavbarMobile from "./NavbarMobile";
+import { Menu, X } from "lucide-react";
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -139,6 +141,12 @@ export default function Navbar() {
           </Link>
 
           {/* MOBILE MENU BUTTON */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
 
