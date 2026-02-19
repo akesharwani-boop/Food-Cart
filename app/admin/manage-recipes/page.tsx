@@ -11,6 +11,7 @@ import RecipeFormModal from "@/features/admin/components/RecipeFormModal";
 import { useAddRecipe } from "@/features/admin/hooks/useAddRecipe";
 import { useUpdateRecipe } from "@/features/admin/hooks/useUpdateRecipe";
 import type { Recipe } from "@/features/admin/types";
+import DeleteConfirmDialog from "@/features/admin/components/DeleteConfirmDialog";
 export default function ManageRecipesPage() {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
@@ -19,10 +20,11 @@ export default function ManageRecipesPage() {
   const deleteMutation = useDeleteRecipe();
 
   const [open, setOpen] = useState(false);
- const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
   const addMutation = useAddRecipe();
   const updateMutation = useUpdateRecipe();
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   if (isLoading) {
     return <p className="p-6">Loading...</p>;
@@ -49,10 +51,11 @@ export default function ManageRecipesPage() {
           <RecipesTable
             data={data.recipes}
             onEdit={(item) => {
+                console.log("Editing item id:", item.id); 
               setSelectedRecipe(item);
               setOpen(true);
             }}
-            onDelete={(id) => deleteMutation.mutate(id)}
+            onDelete={(id) => setDeleteId(id)}
           />
           <RecipeFormModal
             open={open}
@@ -60,7 +63,6 @@ export default function ManageRecipesPage() {
             initialValues={
               selectedRecipe || {
                 name: "",
-                image: "",
                 tags: [],
                 mealType: [],
               }
@@ -82,6 +84,17 @@ export default function ManageRecipesPage() {
           </div>
         </>
       )}
+      <DeleteConfirmDialog
+        open={deleteId !== null}
+        setOpen={() => setDeleteId(null)}
+        onConfirm={() => {
+          if (deleteId) {
+            deleteMutation.mutate(deleteId);
+            setDeleteId(null);
+          }
+        }}
+      />
+      
     </div>
   );
 }

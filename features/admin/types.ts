@@ -17,7 +17,7 @@ export interface RecipesResponse {
 
 export interface RecipePayload {
   name: string;
-  image: string;
+  // image: string;
   tags: string[];
   mealType: string[];
 }
