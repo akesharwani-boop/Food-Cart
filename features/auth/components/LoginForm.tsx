@@ -2,9 +2,9 @@
 
 import { useFormik } from "formik";
 import { loginSchema } from "../validation/login.schema";
-import getUserProfile, { useLogin } from "../hooks/useLogin";
+import { useLogin } from "../hooks/useLogin";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../authSlice";
+import { setTokens, setUser } from "../authSlice";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import type { AppDispatch } from "@/store/store";
@@ -31,35 +31,31 @@ export default function LoginForm() {
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
-        const data = await mutateAsync(values);
+        // 1️⃣ Login
+        const loginData = await mutateAsync(values);
 
-        // 👇 Temporary role logic
-        const role = data.username === "emilys" ? "admin" : "user";
-
+        // 2️⃣ Tokens store
         dispatch(
-          loginSuccess({
-            user: {
-              id: data.id,
-              username: data.username,
-              email: data.email,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              image: data.image,
-              role,
-            },
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
+          setTokens({
+            accessToken: loginData.accessToken,
+            refreshToken: loginData.refreshToken,
           }),
         );
 
+        // 3️⃣ auth/me call
+        const { data: userData } = await api.get("/auth/me");
+
+        // 4️⃣ user store
+        dispatch(setUser(userData));
+
         toast.success("Login successful 🚀");
 
-        if (role === "admin") {
+        if (userData.role === "admin") {
           router.push("/admin/dashboard");
         } else {
           router.push("/products");
         }
-      } catch {
+      } catch (error) {
         toast.error("Invalid credentials ❌");
       }
     },
@@ -105,8 +101,7 @@ export default function LoginForm() {
         w-full
         bg-orange-500
         hover:bg-orange-600
-        text-white"
-      >
+        text-white">
         {isPending ? "Logging in..." : "Login"}
       </Button>
     </form>

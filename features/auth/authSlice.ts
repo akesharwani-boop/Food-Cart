@@ -28,20 +28,25 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginSuccess: (
+    // 🔑 Only tokens set karega
+    setTokens: (
       state,
       action: PayloadAction<{
-        user: User;
         accessToken: string;
         refreshToken: string;
-      }>,
+      }>
     ) => {
-      state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;
     },
 
+    // 👤 Only user set karega
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+    },
+
+    // 🚪 Logout
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
@@ -51,5 +56,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { setTokens, setUser, logout } = authSlice.actions;
 export default authSlice.reducer;
