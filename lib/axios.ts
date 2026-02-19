@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
   const state = store.getState();
   const token = state.auth.accessToken;
 
-  // 🔥 IMPORTANT: Token ho tabhi header set karo
+  //  IMPORTANT: Token ho tabhi header set karna hai 
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -30,7 +30,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // agar 401 aaye aur retry na hua ho
+    // agar 401 aaye aur retry na hua ho toh mujhe dikkat hogi ye mere liye important part hai
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
@@ -47,7 +47,7 @@ api.interceptors.response.use(
           { refreshToken }
         );
 
-        // 🔥 new tokens store karo
+        //  new tokens store karna hai mujhe 
         store.dispatch(
           setTokens({
             accessToken: data.accessToken,
@@ -55,7 +55,7 @@ api.interceptors.response.use(
           })
         );
 
-        // 🔥 new token attach karo
+        //  new token attach karna hai mujhe
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
         return api(originalRequest);

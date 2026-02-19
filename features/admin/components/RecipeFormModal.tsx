@@ -43,26 +43,49 @@ export default function RecipeFormModal({
         </DialogHeader>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
+          {/* Recipe Name */}
           <Input
             name="name"
             placeholder="Recipe Name"
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
             value={formik.values.name}
           />
           {formik.touched.name && formik.errors.name && (
             <p className="text-sm text-red-500">{formik.errors.name}</p>
           )}
 
+          {/* Tags */}
           <Input
-            name="image"
-            placeholder="Image URL"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.image}
+            placeholder="Tags (comma separated)"
+            onChange={(e) =>
+              formik.setFieldValue(
+                "tags",
+                e.target.value.split(",").map((t) => t.trim()),
+              )
+            }
+            defaultValue={formik.values.tags?.join(", ")}
           />
-          {formik.touched.image && formik.errors.image && (
-            <p className="text-sm text-red-500">{formik.errors.image}</p>
+          {formik.touched.tags && formik.errors.tags && (
+            <p className="text-sm text-red-500">
+              {formik.errors.tags as string}
+            </p>
+          )}
+
+          {/* Meal Type */}
+          <Input
+            placeholder="Meal Type (comma separated)"
+            onChange={(e) =>
+              formik.setFieldValue(
+                "mealType",
+                e.target.value.split(",").map((m) => m.trim()),
+              )
+            }
+            defaultValue={formik.values.mealType?.join(", ")}
+          />
+          {formik.touched.mealType && formik.errors.mealType && (
+            <p className="text-sm text-red-500">
+              {formik.errors.mealType as string}
+            </p>
           )}
 
           <Button

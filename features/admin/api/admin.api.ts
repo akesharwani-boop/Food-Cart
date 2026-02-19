@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import type { Recipe, RecipePayload, RecipesResponse } from "../types";
-
+import axios from "axios";
 export const getRecipes = async (page: number): Promise<RecipesResponse> => {
   const limit = 10;
   const skip = (page - 1) * limit;
@@ -13,17 +13,42 @@ export const getRecipes = async (page: number): Promise<RecipesResponse> => {
 };
 
 export const addRecipe = async (payload: RecipePayload): Promise<Recipe> => {
-  const { data } = await api.post<Recipe>("/recipes/add", payload);
+  const randomImage = "https://cdn.dummyjson.com/recipe-images/1.webp";
+
+  const { data } = await api.post<Recipe>("/recipes/add", {
+    ...payload,
+    image: randomImage,
+  });
+
   return data;
 };
 
 export const updateRecipe = async (
   id: number,
-  payload: RecipePayload,
+  payload: RecipePayload
 ): Promise<Recipe> => {
-  const { data } = await api.put<Recipe>(`/recipes/${id}`, payload);
-  return data;
+
+  const response = await fetch(
+    `https://dummyjson.com/recipes/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: payload.name,   
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Update failed");
+  }
+
+  return response.json();
 };
+
+
 
 export const deleteRecipe = async (
   id: number,

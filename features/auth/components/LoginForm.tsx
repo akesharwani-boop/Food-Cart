@@ -31,10 +31,10 @@ export default function LoginForm() {
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
-        // 1️⃣ Login
+        // 1️ Login
         const loginData = await mutateAsync(values);
 
-        // 2️⃣ Tokens store
+        // 2 ye mera Tokens store
         dispatch(
           setTokens({
             accessToken: loginData.accessToken,
@@ -42,10 +42,10 @@ export default function LoginForm() {
           }),
         );
 
-        // 3️⃣ auth/me call
+        // 3️ auth/me call kiya ab
         const { data: userData } = await api.get("/auth/me");
 
-        // 4️⃣ user store
+        // 4️ user store hua mera
         dispatch(setUser(userData));
 
         toast.success("Login successful 🚀");
