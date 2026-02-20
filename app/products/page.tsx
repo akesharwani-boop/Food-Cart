@@ -5,7 +5,9 @@ import { useRecipes } from "@/features/recipes/hooks/useRecipes";
 import ProductGrid from "@/features/product/components/ProductGrid";
 import PaginationComponent from "@/components/shared/PaginationComponent";
 import ProductsToolbar from "./components/ProductsToolbar";
-
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { fetchRecipes } from "@/features/recipes/api/fetchRecipes";
 export default function ProductsPage() {
   const searchParams = useSearchParams();
 
@@ -13,14 +15,46 @@ export default function ProductsPage() {
   const search = searchParams.get("search") ?? undefined;
   const tag = searchParams.get("tag") ?? undefined;
   const meal = searchParams.get("meal") ?? undefined;
-
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useRecipes({
     page,
     search,
     tag,
     meal,
   });
+  useEffect(() => {
+  if (!data) return;
 
+  const totalPages = Math.ceil(data.total / 8);
+
+  // 🔹 Prefetch NEXT page
+  if (page < totalPages) {
+    queryClient.prefetchQuery({
+      queryKey: ["recipes", page + 1, search ?? "", tag ?? "", meal ?? ""],
+      queryFn: () =>
+        fetchRecipes({
+          page: page + 1,
+          search,
+          tag,
+          meal,
+        }),
+    });
+  }
+
+  // 🔹 Prefetch PREVIOUS page
+  if (page > 1) {
+    queryClient.prefetchQuery({
+      queryKey: ["recipes", page - 1, search ?? "", tag ?? "", meal ?? ""],
+      queryFn: () =>
+        fetchRecipes({
+          page: page - 1,
+          search,
+          tag,
+          meal,
+        }),
+    });
+  }
+}, [page, data, search, tag, meal, queryClient]);
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading data</p>;
 

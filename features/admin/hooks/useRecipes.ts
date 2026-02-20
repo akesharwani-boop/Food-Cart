@@ -7,5 +7,7 @@ export const useRecipes = (page: number) => {
     queryKey: ["recipes", page],
     queryFn: () => getRecipes(page),
     placeholderData: (previousData) => previousData,
+    // staleTime: 1000 * 60 * 5, // 5 minutes fresh
+  // cacheTime: 1000 * 60 * 10, // 10 minutes cache me rahe
   });
 };
