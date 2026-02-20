@@ -40,8 +40,8 @@ export default function PaginationComponent({
         {Array.from({ length: totalPages }).map((_, i) => (
           <PaginationItem key={i}>
             <PaginationLink
-              href={createPageURL(i + 1)}
               isActive={currentPage === i + 1}
+              href={createPageURL(i + 1)}
             >
               {i + 1}
             </PaginationLink>
@@ -50,7 +50,10 @@ export default function PaginationComponent({
 
         {currentPage < totalPages && (
           <PaginationItem>
-            <PaginationNext href={createPageURL(currentPage + 1)} />
+            <PaginationNext
+              href={createPageURL(currentPage + 1)}
+              scroll={false}
+            />
           </PaginationItem>
         )}
       </PaginationContent>

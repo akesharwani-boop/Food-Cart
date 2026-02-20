@@ -16,7 +16,7 @@ export default function ProductsPage() {
   const tag = searchParams.get("tag") ?? undefined;
   const meal = searchParams.get("meal") ?? undefined;
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useRecipes({
+  const { data, isFetching, isError } = useRecipes({
     page,
     search,
     tag,
@@ -55,7 +55,7 @@ export default function ProductsPage() {
     });
   }
 }, [page, data, search, tag, meal, queryClient]);
-  if (isLoading) return <p>Loading...</p>;
+  if (!data) return <p>Loading...</p>;
   if (isError) return <p>Error loading data</p>;
 
   if (!data || !data.recipes) {
@@ -67,8 +67,9 @@ export default function ProductsPage() {
     <div className="container mx-auto px-6 py-10 space-y-8">
       <ProductsToolbar />
 
-      <ProductGrid products={data.recipes} total={data.total} page={page} />
-
+      <ProductGrid  products={data.recipes} total={data.total} page={page} 
+      />
+       {isFetching && <p className="text-sm">Updating...</p>}
       <PaginationComponent currentPage={page} totalPages={totalPages} />
     </div>
   );
