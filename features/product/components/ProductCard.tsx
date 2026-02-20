@@ -39,11 +39,14 @@ export default function ProductCard({ product }: { product: Recipe }) {
     <Card className="group overflow-hidden rounded-xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       
       {/* Image */}
-      <div className="relative h-52 w-full overflow-hidden">
+      <div className="relative aspect-[4/3] h-52 w-full overflow-hidden">
         <Image
           src={product.image}
           alt={product.name}
-          fill
+          
+          width={500}
+          height={375}
+          priority={true}
           sizes="(max-width: 768px) 100vw,
                  (max-width: 1200px) 50vw,
                  33vw"
