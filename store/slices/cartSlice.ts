@@ -1,25 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+// import { createSlice } from "@reduxjs/toolkit";
 
-interface CartState {
-  items: number;
-}
+// interface CartState {
+//   items: number;
+// }
 
-const initialState: CartState = {
-  items: 0,
-};
+// const initialState: CartState = {
+//   items: 0,
+// };
 
-const cartSlice = createSlice({
-  name: "cart",
-  initialState,
-  reducers: {
-    addtoCart: (state) => {
-      state.items += 1;
-    },
-    removeFromCart: (state) => {
-      state.items -= 1;
-    },
-  },
-});
+// const cartSlice = createSlice({
+//   name: "cart",
+//   initialState,
+//   reducers: {
+//     addtoCart: (state) => {
+//       state.items += 1;
+//     },
+//     removeFromCart: (state) => {
+//       state.items -= 1;
+//     },
+//   },
+// });
 
-export const { addtoCart, removeFromCart } = cartSlice.actions;
-export default cartSlice.reducer
+// export const { addtoCart, removeFromCart } = cartSlice.actions;
+// export default cartSlice.reducer

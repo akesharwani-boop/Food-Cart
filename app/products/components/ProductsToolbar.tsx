@@ -10,11 +10,11 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-
+import { useTags } from "@/features/admin/hooks/useTags";
 export default function ProductsToolbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const { data: tags, isLoading } = useTags();
   const urlSearch = searchParams.get("search") ?? "";
   const urlMeal = searchParams.get("meal") ?? "";
   const urlTag = searchParams.get("tag") ?? "";
@@ -58,31 +58,49 @@ export default function ProductsToolbar() {
           className="w-full sm:w-[250px]"
         />
 
+        {/* 🔹 Meal Type Select */}
         <Select
-          value={urlMeal}
-          onValueChange={(val) => updateParams("meal", val)}
+          value={urlMeal || "all"}
+          onValueChange={(val) =>
+            updateParams("meal", val === "all" ? "" : val)
+          }
         >
           <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder="Meal Type" />
           </SelectTrigger>
+
           <SelectContent>
-            <SelectItem value="snack">Snack</SelectItem>
+            <SelectItem value="all">All Meals</SelectItem>
+            <SelectItem value="breakfast">Breakfast</SelectItem>
             <SelectItem value="lunch">Lunch</SelectItem>
             <SelectItem value="dinner">Dinner</SelectItem>
+            <SelectItem value="snack">Snack</SelectItem>
           </SelectContent>
         </Select>
 
+        {/* 🔹 Tag Select (Dynamic from API) */}
         <Select
-          value={urlTag}
-          onValueChange={(val) => updateParams("tag", val)}
+          value={urlTag || "all"}
+          onValueChange={(val) => updateParams("tag", val === "all" ? "" : val)}
         >
           <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder="Tag" />
           </SelectTrigger>
+
           <SelectContent>
-            <SelectItem value="Indian">Indian</SelectItem>
-            <SelectItem value="Pakistani">Pakistani</SelectItem>
-            <SelectItem value="Italian">Italian</SelectItem>
+            <SelectItem value="all">All Tags</SelectItem>
+
+            {isLoading && (
+              <SelectItem value="loading" disabled>
+                Loading...
+              </SelectItem>
+            )}
+
+            {tags?.map((tag: string) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
